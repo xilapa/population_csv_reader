@@ -34,6 +34,10 @@ namespace ConsoleApp1
                 j++;
             }
             
+            var OneCountry = reader.ReadOneCountry("BRA");
+            Console.WriteLine($"\n\nThe country is {OneCountry.Name} and it's population is {OneCountry.Population}");
+
+            
                    
         }
     }

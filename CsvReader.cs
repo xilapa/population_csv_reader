@@ -47,7 +47,26 @@ namespace ConsoleApp1
             return _countries;
         }
 
-        
+        public Country ReadOneCountry(string countryCode)
+        {
+            var countries = new Dictionary<string, Country>();
+            Country country;
+            using (var csv = File.OpenText(_csvFilePath))
+            {
+                var csvLine = csv.ReadLine(); // descarta cabeçalhos
+                while((csvLine = csv.ReadLine()) != null)
+                {
+                    country = readCountryFromCsvLine(csvLine);
+                    countries.Add(country.Code,country);
+                }
+            }
+
+            var countryFound = countries.TryGetValue(countryCode, out country);
+            if (!countryFound)
+                country = null;
+
+            return country;
+        }        
 
         private Country readCountryFromCsvLine(string csvLine)
         {
