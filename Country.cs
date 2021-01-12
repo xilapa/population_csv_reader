@@ -1,4 +1,4 @@
-namespace ConsoleApp1
+namespace population_csv_reader
 {
     class Country
     {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace ConsoleApp1
+namespace population_csv_reader
 {
     class CsvReader
     {
@@ -68,6 +68,34 @@ namespace ConsoleApp1
             return country;
         }        
 
+
+        public Dictionary<string, List<Country>> ReadAllCountriesByRegion()
+        {
+            var countries = new Dictionary<string, List<Country>>();
+            
+
+            using (var csv = File.OpenText(_csvFilePath))
+            {
+                var csvLine = csv.ReadLine(); // descartar cabeçalhos
+            
+                while ((csvLine = csv.ReadLine()) != null)
+                {
+                    var country = readCountryFromCsvLine(csvLine);
+                    if(countries.ContainsKey(country.Region))
+                    {
+                        countries[country.Region].Add(country);
+                    }
+                    else
+                    {
+                        var countriesInRegion = new List<Country>() { country };
+                        countries.Add(country.Region,countriesInRegion);
+                    }
+                }
+            }
+
+            return countries;
+        }
+
         private Country readCountryFromCsvLine(string csvLine)
         {
             var parts = csvLine.Split(new char[] {','});
@@ -85,7 +113,7 @@ namespace ConsoleApp1
                     int.TryParse(parts[3], out population);
                     break;
                 case 5: // quando o nome tem vírgula ocorre uma divisão extra
-                    name = (parts[0] + ", " + parts[1]).Trim(); // o nome fica divido nos dois primeiros itens do array
+                    name = (parts[0] + ", " + parts[1]).Trim(new char[] {' ','"'}); // o nome fica divido nos dois primeiros itens do array
                     code = parts[2];
                     region = parts[3];
                     int.TryParse(parts[4], out population);
